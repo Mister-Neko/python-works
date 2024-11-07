@@ -10,8 +10,10 @@ text = paste()
 def add_bullet(txt):
   temp = txt.split('\n')
 
-  temp[0] = '* ' + temp[0]
-  temp = '\n* '.join(temp)
+  for i in range(len(temp)):
+    temp[i] = f'* {temp[i]}'
+
+  temp = '\n'.join(temp)
   return temp
 
 text = add_bullet(text)
