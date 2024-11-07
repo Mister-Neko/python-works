@@ -1,5 +1,5 @@
 inventory = {'rope': 1, 'torch': 6, 'gold coin': 42, 'dagger': 1, 'arrow': 12}
-orc_loot = ['gold coin', 'dagger', 'gold coin', 'gold coin', 'ruby']
+orc_loot = ['gold coin', 'short sword', 'gold coin', 'gold coin', 'ruby']
 
 def display_inventory(inv):
   total_inv = 0
