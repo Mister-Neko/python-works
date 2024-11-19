@@ -9,7 +9,7 @@ def new_py():
   new_py_txt = f'''#! python
 # {new_file_name}.py - {program_des} - v0.0.0
 '''
-  f_obj = open(f'{new_file_name}', 'w')
+  f_obj = open(f'{new_file_name}.py', 'w')
   f_obj.write(f'{new_py_txt}')
   f_obj.close()
 
