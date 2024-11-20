@@ -121,5 +121,3 @@ def rqa_to_file(num, qa):
 q_and_a = state_cap_question(states, capitals)
 
 rqa_to_file(1, q_and_a)
-
-# r_q_order(q_and_a)
