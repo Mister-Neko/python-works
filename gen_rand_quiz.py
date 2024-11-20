@@ -26,6 +26,7 @@ Use random.shuffle() to randomize the order of the questions and multiple-choice
 from random import choice
 from random import randint
 from os import path
+from pyinputplus import inputInt
 # The quiz data. Keys are states and values are their capitals.
 capitals = {'Alabama': 'Montgomery', 'Alaska': 'Juneau', 'Arizona': 'Phoenix',
             'Arkansas': 'Little Rock', 'California': 'Sacramento',
@@ -120,4 +121,5 @@ def rqa_to_file(num, qa):
 
 q_and_a = state_cap_question(states, capitals)
 
-rqa_to_file(1, q_and_a)
+num = inputInt(prompt='Enter number of quizes: ', max=50)
+rqa_to_file(num, q_and_a)
