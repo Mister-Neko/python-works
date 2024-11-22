@@ -23,8 +23,11 @@ Call open(), write(), and close() for the quiz and answer key text files
 Use random.shuffle() to randomize the order of the questions and multiple-choice options
 '''
 
+import re
 from random import choice
 from random import randint
+from random import shuffle
+from copy import deepcopy
 from os import path
 from pyinputplus import inputInt
 # The quiz data. Keys are states and values are their capitals.
@@ -52,8 +55,6 @@ capitals = {'Alabama': 'Montgomery', 'Alaska': 'Juneau', 'Arizona': 'Phoenix',
             'West Virginia': 'Charleston', 'Wisconsin': 'Madison',
             'Wyoming': 'Cheyenne'}
 
-states = tuple(capitals)
-cap_only = tuple(capitals.values())
 
 def state_cap_question(states, capitals):
   s = states
@@ -74,36 +75,39 @@ def state_cap_question(states, capitals):
   
   return temp_q
 
-def r_q_order(qa):
-  rqa = {}
-  counter = 0
-  
-  while counter < 50:
-    temp_q = choice(list(qa))
-    temp_a = qa[temp_q]
-    tl = []
-
-    if temp_q in rqa:
-      continue
-    else:
-      tstr = ''
-      while len(tl) < 3:
-        if temp_a not in (t := choice(list(qa.values()))):
-          tl.append(t)
-      tl.insert(randint(0, 3), temp_a)
-
-      for i in range(4):
-        tstr += f'\n{chr(97 + i)}. {tl[i]}'
-      rqa[temp_q] = tstr
-      
-      counter += 1
+def r_q_order(capitals):
+  s = list(capitals.keys())
+  c = capitals
+  shuffle(s)
+  rqa = state_cap_question(s, c)
 
   return rqa
 
+def r_ma(qa):
+  trqa = deepcopy(qa)
+  tq = list(trqa.keys())
+  
+  for i in range(50):
+    tl = []
+    tstr = ''
+    while len(tl) < 3:
+      if trqa[tq[i]] not in (t := choice(list(trqa.values()))):
+        tl.append(t)
+    tl.insert(randint(0, 3), trqa[tq[i]])
+
+    for j in range(4):
+      tstr += f'\n{chr(65 + j)}. {tl[j]}'
+    trqa[tq[i]] = tstr
+  return trqa
+
+
 def rqa_to_file(num, qa):
-  header = 'State Captials Quiz\n'
+  header1 = 'State Capitals Quiz'
+  header2 = 'State Capitals Quiz Answer Keys'
+
   for i in range(num):
     rqa = r_q_order(qa)
+    rqma = r_ma(rqa)
 
     if path.isfile(f'capital_quiz{i + 1}.txt'):
       fobj = open(f'capital_quiz{i + 1}.txt', 'w')
@@ -112,14 +116,32 @@ def rqa_to_file(num, qa):
 
     fobj = open(f'capital_quiz{i + 1}.txt', 'a')
     q_num = 1
-    fobj.write(header)
+    fobj.write(f'{header1} Test No. {i + 1}')
+    for k in rqma:
+      fobj.write(f'\n\n{q_num}. {k}\n{rqma[k]}')
+      q_num += 1
+    fobj.close()
+  
+    if path.isfile(f'capital_quiz_answer{i + 1}.txt'):
+      fobj = open(f'capital_quiz_answer{i + 1}.txt', 'w')
+      fobj.write('')
+      fobj.close()
+
+    fobj = open(f'capital_quiz_answer{i + 1}.txt', 'a')
+    q_num = 1
+    fobj.write(f'{header2} Test No. {i + 1}')
     for k in rqa:
-      fobj.write(f'\n\n{q_num}. {k}\n{rqa[k]}')
+      temp_l = rqma[k].split('\n')
+      a = re.compile(fr'.*{rqa[k]}')
+      for j in range(len(temp_l)):
+        m = a.match(temp_l[j])
+        if m:
+          fobj.write(f'\n\n{q_num}. {k}\n{temp_l[j]}')
       q_num += 1
     fobj.close()
     
 
-q_and_a = state_cap_question(states, capitals)
+
 
 num = inputInt(prompt='Enter number of quizes: ', max=50)
-rqa_to_file(num, q_and_a)
+rqa_to_file(num,  capitals)
