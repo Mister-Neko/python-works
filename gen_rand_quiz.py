@@ -24,7 +24,7 @@ Use random.shuffle() to randomize the order of the questions and multiple-choice
 '''
 
 import re
-from random import choice
+from random import sample
 from random import randint
 from random import shuffle
 from copy import deepcopy
@@ -88,15 +88,16 @@ def r_ma(qa):
   tq = list(trqa.keys())
   
   for i in range(50):
-    tl = []
+    ans = trqa[tq[i]]
+    ta = list(qa.values())
+    del ta[ta.index(ans)]
     tstr = ''
-    while len(tl) < 3:
-      if trqa[tq[i]] not in (t := choice(list(qa.values()))):
-        tl.append(t)
-    tl.insert(randint(0, 3), trqa[tq[i]])
+    tl = sample(ta, 3)
+    tl.insert(randint(0,3), ans)
+    shuffle(tl)
 
     for j in range(4):
-      tstr += f'\n{chr(65 + j)}. {tl[j]}'
+      tstr += f'\n\t{chr(65 + j)}. {tl[j]}'
     trqa[tq[i]] = tstr
   return trqa
 
@@ -116,7 +117,8 @@ def rqa_to_file(num, qa):
 
     fobj = open(f'capital_quiz{i + 1}.txt', 'a')
     q_num = 1
-    fobj.write(f'{header1} Test No. {i + 1}')
+    fobj.write(f'Name:\n\n\nDate\n\n\nPeriod:\n\n\n')
+    fobj.write(f'{'\t' * 10}{header1} Form No. {i + 1}')
     for k in rqma:
       fobj.write(f'\n\n{q_num}. {k}\n{rqma[k]}')
       q_num += 1
@@ -129,14 +131,14 @@ def rqa_to_file(num, qa):
 
     fobj = open(f'capital_quiz_answer{i + 1}.txt', 'a')
     q_num = 1
-    fobj.write(f'{header2} Test No. {i + 1}')
+    fobj.write(f'{'\t' * 10}{header2} Form No. {i + 1}')
     for k in rqa:
       temp_l = rqma[k].split('\n')
       a = re.compile(fr'.*{rqa[k]}')
       for j in range(len(temp_l)):
         m = a.match(temp_l[j])
         if m:
-          fobj.write(f'\n\n{q_num}. {k}\n{temp_l[j]}')
+          fobj.write(f'\n\n{q_num}. {temp_l[j]}')
       q_num += 1
     fobj.close()
     
