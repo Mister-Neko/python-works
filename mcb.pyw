@@ -32,14 +32,18 @@ try:
     exit()
   elif argv[1] == 'save':
     if argv[2]:
-      mcb_s[argv[2]] = cb_paste
+      mcb_s[argv[2]] = cb_paste()
   elif argv[1] in mcb_s:
     cb_copy(mcb_s[argv[1]])
   elif argv[1] == 'list':
     t_str = ''
     for k in mcb_s:
       t_str += f'{mcb_s[k]}\n'
+    cb_copy(t_str)
 except IndexError:
-  print('error: no value given.')
+  print('error: no value given')
+else:
+  print('error: command not recognized')
+  print('Require arguements:\n\tsave <keyword>\n\tlist <keyword>\n\t<keyword>')
 
 mcb_s.close()
