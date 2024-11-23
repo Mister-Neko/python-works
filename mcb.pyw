@@ -21,8 +21,8 @@ Usage:
 
 from sys import argv
 from shelve import open as s_open
-from pyperclip import copy as cb_copy
-from pyperclip import paste as cb_paste
+from pyperclip import copy as pcopy
+from pyperclip import paste as ppaste
 
 mcb_s = s_open('mcb')
 
@@ -32,14 +32,21 @@ try:
     exit()
   elif argv[1] == 'save':
     if argv[2]:
-      mcb_s[argv[2]] = cb_paste()
+      mcb_s[argv[2]] = ppaste()
   elif argv[1] in mcb_s:
-    cb_copy(mcb_s[argv[1]])
+    pcopy(mcb_s[argv[1]])
   elif argv[1] == 'list':
     t_str = ''
     for k in mcb_s:
       t_str += f'{mcb_s[k]}\n'
-    cb_copy(t_str)
+    pcopy(t_str)
+  elif argv[1] == 'delete':
+    if argv[2] == 'all':
+      for k in mcb_s:
+        del mcb_s[k]
+      pcopy('')
+    elif argv[2] in mcb_s:
+      del mcb_s[argv[2]]
 except IndexError:
   print('error: no value given')
 else:
