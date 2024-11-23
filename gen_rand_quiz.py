@@ -91,7 +91,7 @@ def r_ma(qa):
     tl = []
     tstr = ''
     while len(tl) < 3:
-      if trqa[tq[i]] not in (t := choice(list(trqa.values()))):
+      if trqa[tq[i]] not in (t := choice(list(qa.values()))):
         tl.append(t)
     tl.insert(randint(0, 3), trqa[tq[i]])
 
